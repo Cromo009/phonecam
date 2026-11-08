@@ -1,0 +1,17 @@
+name: Build IPA
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install xcodegen && xcodegen generate
+      - run: |
+          xcodebuild -project PhoneCam.xcodeproj -scheme PhoneCam -sdk iphoneos -configuration Release -derivedDataPath build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" build
+          mkdir Payload
+          cp -R build/Build/Products/Release-iphoneos/PhoneCam.app Payload/
+          zip -qr PhoneCam.ipa Payload
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PhoneCam-ipa
+          path: PhoneCam.ipa
