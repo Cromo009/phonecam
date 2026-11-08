@@ -1,0 +1,26 @@
+name: PhoneCam
+options:
+  bundleIdPrefix: com.example
+  deploymentTarget:
+    iOS: "16.0"
+targets:
+  PhoneCam:
+    type: application
+    platform: iOS
+    sources: [App]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.phonecam
+        SWIFT_VERSION: "5.0"
+    info:
+      path: App/Info.plist
+      properties:
+        UILaunchScreen: {}
+        NSCameraUsageDescription: ARKit usa la camara para seguir tus pasos
+        NSLocalNetworkUsageDescription: Conectar con tu PC
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoads: true
+        UIRequiredDeviceCapabilities: [arkit]
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
