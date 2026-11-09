@@ -53,7 +53,15 @@ struct MJPEG: UIViewRepresentable {
         w.isOpaque = false
         w.backgroundColor = .black
         w.scrollView.isScrollEnabled = false
-        w.loadHTMLString("<body style='margin:0;background:#000'><img src='\(url)' style='width:100vw;height:100vh;object-fit:contain'></body>", baseURL: nil)
+        let html = """
+        <body style='margin:0;background:#000'><img id='i' style='width:100vw;height:100vh;object-fit:contain'>
+        <script>
+        var u='\(url.absoluteString)',i=document.getElementById('i'),t=0;
+        function n(){setTimeout(function(){t=Date.now();var x=new Image();x.onload=function(){i.src=x.src;n()};x.onerror=function(){setTimeout(n,200)};x.src=u+'?'+t},Math.max(0,33-(Date.now()-t)))}
+        n()
+        </script></body>
+        """
+        w.loadHTMLString(html, baseURL: nil)
         return w
     }
     func updateUIView(_ v: WKWebView, context: Context) {}
@@ -78,7 +86,7 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
-            if on, let u = URL(string: "http://\(ip):5007/stream") {
+            if on, let u = URL(string: "http://\(ip):5007/snap") {
                 MJPEG(url: u).ignoresSafeArea()
                 controls
             } else {
